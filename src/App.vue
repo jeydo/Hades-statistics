@@ -1,9 +1,9 @@
 <template>
     <div class="row">
         <div class="col mt-3">
-            <Form @addRun="addRun" :runs="runs" />
+            <Form @addRun="addRun" :lastRun="runs.slice(-1)[0]" />
         </div>
-        <div class="col mt-3 list-container overflow-auto">
+        <div class="col mt-3 list-container overflow-auto" ref="list-container">
             <ul class="list-group">
                 <Run v-for="(run, index) in runs" :index="index" :run="run" @remove="remove(index)" />
             </ul>
@@ -26,6 +26,9 @@ export default {
     components: {
        Form, Run, Chart
     },
+    mounted() {
+        this.scrollDownList()
+    },
     data() {
         return {
             runs : JSON.parse(localStorage.getItem('runs') || JSON.stringify([]))
@@ -33,20 +36,22 @@ export default {
     },
     methods : {
         remove(index) {
-            //console.log(index)
             this.runs.splice(index, 1)
             this.saveRuns()
         },
         addRun(run) {
             this.runs.push(run)
             this.saveRuns()
+            this.$refs['chart-component'].update()
+            this.$nextTick(function () {
+                this.scrollDownList()
+            })
         },
         saveRuns() {
             localStorage.setItem('runs', JSON.stringify(this.runs))
-            this.$refs['chart-component'].update()
         },
-        scrollDown() {
-
+        scrollDownList() {
+            this.$refs['list-container'].scrollTop = this.$refs['list-container'].scrollHeight
         }
     }
 }

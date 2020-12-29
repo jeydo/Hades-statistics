@@ -53,34 +53,22 @@ import consts from '../const'
 
 export default {
   name: 'Form',
-  props : ['runs'],
+  props : ['last-run'],
   created () {
     this.consts = consts;
   },
   data() {
-    
+    let run = Object.assign({}, this.lastRun)
+    run.number++
     return {
-        run : this.getLastRun()
+        run : run
     }
   },
   methods : {
     addRun() {
         //this.run.number = this.$refs.run.value;
         this.$emit('add-run', Object.assign({}, this.run))
-    },
-    getLastRun() {
-        let lastRun = this.runs.slice(-1)[0]
-        if (!lastRun) {
-            lastRun = {
-                number : 0,
-                location : consts.LOCATIONS[0],
-                weapon : Object.keys(consts.WEAPONS)[0],
-                aspect : consts.WEAPONS[Object.keys(consts.WEAPONS)[0]][0],
-                heat : 0
-            }
-        }
-        lastRun.number++
-        return lastRun
+        this.run.number += 1
     }
   }
 }
