@@ -2,7 +2,7 @@
     <div class="form">
         <div class="mb-3">
             <label for="run-number" class="form-label">Run #</label>
-            <input type="number" name="run" ref="run" id="run-number" class="form-control form-control-sm" v-model="run.number" />
+            <input min="1" type="number" name="run" ref="run" id="run-number" class="form-control form-control-sm" v-model.number="run.number" />
         </div>
         <div class="mb-3">
             <label class="form-label">Location</label>
@@ -41,7 +41,7 @@
         </div>
         <div class="mb-3">
             <label for="heat" class="form-label">Heat</label>
-            <input type="number" name="heat" id="heat" class="form-control form-control-sm" v-model="run.heat" />
+            <input min="0" max="64" type="number" name="heat" id="heat" class="form-control form-control-sm" v-model.number="run.heat" />
         </div>
 
         <button type="button" class="btn btn-primary" @click="addRun()">Add Run</button>
@@ -53,22 +53,31 @@ import consts from '../const'
 
 export default {
   name: 'Form',
-  props : ['last-run'],
+  props : ['last-run', 'number'],
   created () {
     this.consts = consts;
   },
   data() {
-    let run = Object.assign({}, this.lastRun)
+    let run = Object.assign({
+        number : 0,
+        heat : 0,
+        location : consts.LOCATIONS[0],
+        weapon : Object.keys(consts.WEAPONS)[0],
+        aspect : consts.WEAPONS[Object.keys(consts.WEAPONS)[0]][0]
+    }, this.lastRun)
     run.number++
     return {
         run : run
     }
   },
+  watch : {
+    lastRun() {
+        this.run.number = this.lastRun ? this.lastRun.number + 1 : 1
+    }
+  },
   methods : {
     addRun() {
-        //this.run.number = this.$refs.run.value;
         this.$emit('add-run', Object.assign({}, this.run))
-        this.run.number += 1
     }
   }
 }

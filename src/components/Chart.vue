@@ -85,14 +85,16 @@
             chartDataArray() {
                 let arr = [];
                 this.runs.forEach((run) => {
-                    arr.push(run.location)
+                    if (run && consts.NOT_IN_CHART.indexOf(run.location) == -1)
+                        arr.push(run.location)
                 });
                 return arr; 
             },
             chartAxis() {
                 let arr = [];
                 this.runs.forEach((run) => {
-                    arr.push(run.number)
+                    if (run && consts.NOT_IN_CHART.indexOf(run.location) == -1)
+                        arr.push(run.number)
                 })
                 return arr;
             },

@@ -10,6 +10,10 @@ export default Object.freeze({
         'Hades',
         'Escaped'
     ],
+    NOT_IN_CHART : [
+        'Charon',
+        'Erebus'
+    ],
     WEAPONS : {
             'Stygius, Stygian Blade' : [
                 'Zagreus',

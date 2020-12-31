@@ -1,11 +1,13 @@
 <template>
     <div class="row">
         <div class="col mt-3">
-            <Form @addRun="addRun" :lastRun="runs.slice(-1)[0]" />
+            <Form @addRun="addRun" :lastRun="runs[runs.length - 1]" />
         </div>
         <div class="col mt-3 list-container overflow-auto" ref="list-container">
             <ul class="list-group">
-                <Run v-for="(run, index) in runs" :index="index" :run="run" @remove="remove(index)" />
+                <template v-for="(run, index) in runs">
+                    <Run  v-if="run" :index="index" :run="run" @remove="remove(index)" />
+                </template> 
             </ul>
         </div>
     </div>
@@ -40,7 +42,10 @@ export default {
             this.saveRuns()
         },
         addRun(run) {
-            this.runs.push(run)
+            this.runs[run.number - 1] = run
+            /*if (this.runs.length != run.number) {
+                this.reOrderRuns()
+            }*/
             this.saveRuns()
             this.$refs['chart-component'].update()
             this.$nextTick(function () {
@@ -52,6 +57,16 @@ export default {
         },
         scrollDownList() {
             this.$refs['list-container'].scrollTop = this.$refs['list-container'].scrollHeight
+        },
+        getCurrentRunNumber() {
+            return this.runs.length ? parseInt(this.runs[this.runs.length - 1].number) + 1 : 1
+        },
+        reOrderRuns() {
+            let runs = []
+            this.runs.forEach((run) => {
+                runs[run.number - 1] = run
+            })
+            this.runs = runs
         }
     }
 }
