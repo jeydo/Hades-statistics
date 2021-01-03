@@ -18,7 +18,7 @@
     </div>
     <div class="row mt-3 mb-3">
         <div class="col">
-            <button type="button" class="btn btn-primary" @click="downloadChart()">Export Chart</button> <button type="button" class="btn btn-info" @click="displayExportData = !displayExportData">Export Data</button> <button type="button" class="btn btn-info" @click="toggleImport">Import Data</button>
+            <button type="button" class="btn btn-primary" @click="downloadChart()">Download Chart</button> <button type="button" class="btn btn-info" @click="displayExportData = !displayExportData">Export Data</button> <button type="button" class="btn btn-info" @click="toggleImport">Import Data</button>
         </div>
     </div>
     <div class="row mb-3" v-if="displayExportData">
