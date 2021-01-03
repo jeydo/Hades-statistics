@@ -16,12 +16,30 @@
             <Chart :runs="runs" ref="chart-component" />
         </div>
     </div>
+    <div class="row mt-3 mb-3">
+        <div class="col">
+            <button type="button" class="btn btn-primary" @click="downloadChart()">Export Chart</button> <button type="button" class="btn btn-info" @click="displayExportData = !displayExportData">Export Data</button> <button type="button" class="btn btn-info" @click="toggleImport">Import Data</button>
+        </div>
+    </div>
+    <div class="row mb-3" v-if="displayExportData">
+        <div class="col user-select-all border">
+            {{ runs }}
+        </div>
+    </div>
+    <div class="row mb-3" v-if="displayImportData">
+        <form>
+            <p v-if="importErrors" class="bg-danger">{{ importErrors }}</p>
+            <textarea class="form-control" v-model="dataToImport"></textarea>
+            <button type="button" class="btn btn-info" @click="importData">Import</button>
+        </form> 
+    </div>
 </template>
 
 <script>
 import Form from './components/Form.vue'
 import Run from './components/Run.vue'
 import Chart from './components/Chart.vue'
+import consts from './const'
 
 export default {
     name: 'App',
@@ -33,7 +51,11 @@ export default {
     },
     data() {
         return {
-            runs : JSON.parse(localStorage.getItem('runs') || JSON.stringify([]))
+            runs : JSON.parse(localStorage.getItem('runs') || JSON.stringify([])),
+            displayExportData : false,
+            displayImportData : false,
+            dataToImport : '',
+            importErrors : ''
         }
     },
     methods : {
@@ -41,16 +63,19 @@ export default {
             this.runs.splice(index, 1)
             this.saveRuns()
         },
-        addRun(run) {
-            this.runs[run.number - 1] = run
-            /*if (this.runs.length != run.number) {
-                this.reOrderRuns()
-            }*/
-            this.saveRuns()
+        redrawChart() {
             this.$refs['chart-component'].update()
+        },
+        updateVisibility() {
             this.$nextTick(function () {
+                this.redrawChart()
                 this.scrollDownList()
             })
+        },
+        addRun(run) {
+            this.runs[run.number - 1] = run
+            this.saveRuns()
+            this.updateVisibility()
         },
         saveRuns() {
             localStorage.setItem('runs', JSON.stringify(this.runs))
@@ -67,6 +92,51 @@ export default {
                 runs[run.number - 1] = run
             })
             this.runs = runs
+        },
+        downloadChart() {
+            this.$refs['chart-component'].download()
+        },
+        toggleImport() {
+            this.displayImportData = !this.displayImportData
+        },
+        importData() {
+            this.importErrors = ''
+            try {
+                let runsToImport = JSON.parse(this.dataToImport),
+                    newRuns = []
+                for (let run of runsToImport) {
+                    if (!this.checkRun(run)) {
+                        this.importErrors = 'Run is corrupted : ' + run
+                        return
+                    }
+                    newRuns[run.number - 1] = run
+                }
+                this.runs = newRuns
+                this.importErrors = ''
+                this.updateVisibility()
+                this.toggleImport()
+            } catch (e) {
+                this.importErrors = 'Impossible to parse datas'
+                return
+            }
+        },
+        checkRun(run) {
+            if (!run.hasOwnProperty('number') || run.number < 0) {
+                return false
+            }
+            if (!run.hasOwnProperty('location') || consts.LOCATIONS.indexOf(run.location) < 0) {
+                return false
+            }
+            if (!run.hasOwnProperty('weapon') || !consts.WEAPONS.hasOwnProperty(run.weapon)) {
+                return false
+            }
+            if (!run.hasOwnProperty('aspect') || consts.WEAPONS[run.weapon].indexOf(run.aspect) < 0) {
+                return false
+            }
+            if (!run.hasOwnProperty('heat') || run.number < 0) {
+                return false
+            }
+            return true
         }
     }
 }

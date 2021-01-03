@@ -1,5 +1,7 @@
 <template>
-    <canvas id="myChart" height="400"></canvas>
+    <div>
+        <canvas id="myChart" height="400"></canvas>
+    </div>
 </template>
 
 <script>
@@ -16,6 +18,13 @@
             let ctx = document.getElementById('myChart').getContext('2d');
             let chart = new Chart(ctx, this.options);
             this.chart = chart;
+            Chart.plugins.register({
+                beforeDraw: function(chartInstance) {
+                    var ctx = chartInstance.chart.ctx;
+                    ctx.fillStyle = "white";
+                    ctx.fillRect(0, 0, chartInstance.chart.width, chartInstance.chart.height);
+                }
+            });
         },
         data() {
             let options = {
@@ -110,6 +119,12 @@
                 this.chart.data.datasets[1].data = this.chartBar()
                 this.chart.options.scales.xAxes[0].labels = this.chartAxis()
                 this.chart.update()
+            },
+            download() {
+                let a = document.createElement('a')
+                a.href = this.chart.toBase64Image()
+                a.download = 'hades-chart.png'
+                a.click()
             }
         }
     }
