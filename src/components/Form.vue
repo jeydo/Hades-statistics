@@ -11,14 +11,6 @@
                     <input class="form-check-input" name="location" type="radio" :id="'l-' + location" :value="location" v-model="run.location">
                     <label class="form-check-label" :for="'l-' + location">{{ location }}</label>
                 </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" name="location" type="radio" id="l-Erebus" value="Erebus" v-model="run.location">
-                    <label class="form-check-label" for="l-Erebus">Erebus</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" name="location" type="radio" id="l-Charon" value="Charon" v-model="run.location">
-                    <label class="form-check-label" for="l-Charon">Charon</label>
-                </div>
             </div>
         </div> 
         <div class="mb-3">

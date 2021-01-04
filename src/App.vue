@@ -22,7 +22,7 @@
         </div>
     </div>
     <div class="row mb-3" v-if="displayExportData">
-        <div class="col user-select-all border">
+        <div class="col user-select-all border export-datas overflow-auto">
             {{ runs }}
         </div>
     </div>
@@ -115,6 +115,8 @@ export default {
                 this.importErrors = ''
                 this.updateVisibility()
                 this.toggleImport()
+                this.dataToImport = ''
+                this.saveRuns()
             } catch (e) {
                 this.importErrors = 'Impossible to parse datas'
                 return
