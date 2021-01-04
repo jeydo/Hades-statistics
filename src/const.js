@@ -8,7 +8,9 @@ export default Object.freeze({
         'Theseus',
         'Temple of Styx',
         'Hades',
-        'Escaped'
+        'Escaped',
+        'Charon',
+        'Erebus'
     ],
     NOT_IN_CHART : [
         'Charon',

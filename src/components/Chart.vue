@@ -89,7 +89,12 @@
         },
         methods : {
             getLabels() {
-                return [].concat([''], consts.LOCATIONS, ['']).reverse()
+                let labels = [''].concat(
+                    consts.LOCATIONS.filter((location) => {
+                        return !consts.NOT_IN_CHART.includes(location)
+                    }))
+                labels.push('')
+                return labels.reverse()
             },
             chartDataArray() {
                 let arr = [];

@@ -106,7 +106,7 @@ export default {
                     newRuns = []
                 for (let run of runsToImport) {
                     if (!this.checkRun(run)) {
-                        this.importErrors = 'Run is corrupted : ' + run
+                        this.importErrors = 'Run is corrupted : ' + JSON.stringify(run)
                         return
                     }
                     newRuns[run.number - 1] = run
@@ -124,7 +124,7 @@ export default {
             if (!run.hasOwnProperty('number') || run.number < 0) {
                 return false
             }
-            if (!run.hasOwnProperty('location') || consts.LOCATIONS.indexOf(run.location) < 0) {
+            if (!run.hasOwnProperty('location') || !consts.LOCATIONS.includes(run.location)) {
                 return false
             }
             if (!run.hasOwnProperty('weapon') || !consts.WEAPONS.hasOwnProperty(run.weapon)) {
