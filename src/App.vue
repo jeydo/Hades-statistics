@@ -39,7 +39,7 @@
 import Form from './components/Form.vue'
 import Run from './components/Run.vue'
 import Chart from './components/Chart.vue'
-import consts from './const'
+import consts from './const.js'
 
 export default {
     name: 'App',
